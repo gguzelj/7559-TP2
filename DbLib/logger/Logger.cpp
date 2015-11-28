@@ -2,6 +2,10 @@
 
 using namespace std;
 
+void Logger::setName(string otherName){
+	this->name = otherName;
+}
+
 Logger::Logger() :
 		lockFile(utils::LOG_FILE.c_str()) {
 	this->log_level = LogLevel::INFO;

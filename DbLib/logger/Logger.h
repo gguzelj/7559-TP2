@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <vector>
-#include "../LockFile/LockFile.h"
+#include "../lockFile/LockFile.h"
 #include "../utils/Helper.h"
 #include "../utils/utils.h"
 
@@ -19,7 +19,7 @@ static void replacer(string& data, string toReplace) {
 	data = data.replace(data.find_first_of("{}"), 2, toReplace);
 }
 
-template< typename ... Args >
+template<typename ... Args >
 std::string replace(string data, Args... args ){
     std::ostringstream stream;
     using List= int[];
@@ -74,6 +74,8 @@ public:
 	void logErrOn(bool cond);
 
 	void setLogLevel(LogLevel logLevel);
+
+	void setName(string name);
 
 private:
 	void logLocking(const string data, LogLevel);

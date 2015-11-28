@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cerrno>
 #include <string>
+#include <sstream>
 #include "../utils/utils.h"
 
 class Helper {
@@ -19,11 +20,6 @@ public:
 		std::stringstream convert;
 		convert << t;
 		return std::string(convert.str());
-	}
-
-	static std::string getSemaphoreName() {
-		std::string pidstr = convertToString(getpid());
-		return pidstr.append(utils::SEM_EXTENSION);
 	}
 
 };
