@@ -6,6 +6,6 @@ ClientQueue::ClientQueue(const std::string& archivo, const char letra) : queue(a
 ClientQueue::~ClientQueue() {
 }
 
-unsigned int ClientQueue::connect() {
+unsigned int ClientQueue::getQueue() {
 	return queue.getQueue();
 }

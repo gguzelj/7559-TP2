@@ -9,9 +9,11 @@ int main() {
 
 	//Connect with DbManager
 	if( client.connect() == CONNECTION_ERROR ){
-		std::cout << "No DbManager found" << std::endl;
+		cout << "No DbManager found" << std::endl;
 		exit(CONNECTION_ERROR);
 	}
+
+	cout << "client> connection established!" << endl << "client>";
 
 	//Process requests
 	while(true){

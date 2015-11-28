@@ -6,26 +6,29 @@
 #define READ_RESPONSE 2
 #define SELECT_RESPONSE 3
 
-typedef struct {
-	long mtype = CONNECTION_RESPONSE;
-	unsigned int result;
-	long connectionId;
-} connectionResponse;
+#define CONNECTION_OK 0
+#define CONNECTION_ERROR 1
 
 typedef struct {
-	long mtype = INSERT_RESPONSE;
+	long mtype;
+	unsigned int result;
+	long connectionId;
+} newConnectionResponse;
+
+typedef struct {
+	long mtype;
 	unsigned int result;
 } insertResponse;
 
 typedef struct {
-	long mtype = READ_RESPONSE;
+	long mtype;
 	char nombre[61];
 	char direccion[120];
 	char telefono[13];
 } readResponse;
 
 typedef struct {
-	long mtype = SELECT_RESPONSE;
+	long mtype;
 	char nombre[61];
 	char direccion[120];
 	char telefono[13];

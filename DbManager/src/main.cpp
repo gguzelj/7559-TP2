@@ -12,20 +12,8 @@ int main() {
 
 	Manager manager;
 
-	cout << "creando cola" << endl;
+	while(true){
+		manager.handleRequest();
+	}
 
-	ServerQueue cola(std::string("/Recept.log"), '1');
-	cola.create();
-
-	cout << "cola creada" << endl;
-
-	insertRequest request;
-
-	cout << "recibiendo erquest" << endl;
-
-	cola.receive(INSERT_REQUEST, &request);
-
-	cout << "request envciada... telefono: "<< request.telefono << endl;
-
-	sleep(10);
 }

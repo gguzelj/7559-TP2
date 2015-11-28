@@ -28,11 +28,15 @@ public:
 };
 
 template<class T> void Queue::send(T dato) {
-	msgsnd(this->id, static_cast<const void*>(&dato), sizeof(T) - sizeof(long), 0);
+	std::cout << "Sending msg to id: " << this->id << std::endl;
+	if(msgsnd(this->id, static_cast<const void*>(&dato), sizeof(T) - sizeof(long), 0) < 0 )
+		perror("ERROR ENVIANDO");
 }
 
 template<class T> void Queue::receive(const unsigned int type, T* buffer) {
-	msgrcv(this->id, static_cast<void *>(buffer), sizeof(T) - sizeof(long), type, 0);
+	std::cout << "Receiving msg id: " << this->id << " type: " << type << std::endl;
+	if(msgrcv(this->id, static_cast<void *>(buffer), sizeof(T) - sizeof(long), type, 0) < 0)
+		perror("ERROR RECIV");
 }
 
 #endif /* QUEUE_H_ */

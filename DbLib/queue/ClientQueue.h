@@ -12,7 +12,7 @@ public:
 	template<class T> void send(T dato);
 	template<class T> void receive(const unsigned int type, T* dato);
 
-	unsigned int connect();
+	unsigned int getQueue();
 
 private:
 	Queue queue;

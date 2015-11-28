@@ -1,6 +1,7 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
+#include <sstream>
 #include <cstdlib>
 #include <utils/utils.h>
 #include <logger/Logger.h>
@@ -13,11 +14,12 @@ public:
 	Client();
 	virtual ~Client();
 
-	void processInput(std::string input);
+	std::string processInput(std::string input);
 	unsigned int connect();
 
 private:
-	Queue connectionQueue;
+	ClientQueue requestsQueue;
+	ClientQueue connectionQueue;
 	long connectionId;
 	Logger log;
 

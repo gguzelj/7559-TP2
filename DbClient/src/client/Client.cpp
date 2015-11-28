@@ -1,7 +1,8 @@
 #include "Client.h"
 
 Client::Client() :
-		connectionQueue(utils::QUEUE_FILE, utils::QUEUE_FILE_CHAR),
+		requestsQueue(utils::QUEUE_FILE, utils::REQUEST_QUEUE),
+		connectionQueue(utils::QUEUE_FILE, utils::CONNECTION_QUEUE),
 		connectionId(0),
 		log(Logger::LogLevel::DEBUG) {
 
@@ -13,7 +14,8 @@ Client::~Client() {
 unsigned int Client::connect(){
 	log.debug("Trying to connect to DbManager");
 
-	if(connectionQueue.getQueue() == CONNECTION_ERROR){
+	if( (requestsQueue.getQueue() == CONNECTION_ERROR) ||
+		(connectionQueue.getQueue() == CONNECTION_ERROR)){
 		log.debug("Error while trying to connect with DbManager");
 		return CONNECTION_ERROR;
 	}
@@ -21,38 +23,44 @@ unsigned int Client::connect(){
 	sendConnectionRequest();
 	receiveConnectionResponse();
 
-	log.setName(Helper::convertToString(this->connectionId));
-
 	return CONNECTION_OK;
 }
 
 void Client::sendConnectionRequest() {
+	this->connectionId = getRandomUUID();
+
 	log.debug("Sending connection request");
-	connectionRequest request;
-	request.mtype = CONNECTION_REQUEST;
-	request.clientUUID = getRandomUUID();
-	connectionQueue.send(request);
+	request request;
+	request.mtype = NEW_CONNECTION;
+	request.connectionId = this->connectionId;
+	request.typeRequest = NEW_CONNECTION;
+	requestsQueue.send(request);
 }
 
 void Client::receiveConnectionResponse() {
 	log.debug("Receiving connection response");
 
-	connectionResponse response;
-	connectionQueue.receive(CONNECTION_RESPONSE, &response);
+	newConnectionResponse response;
+	connectionQueue.receive(this->connectionId, &response);
 
-	if(response.result == CONNECTION_ERROR)
+	if(response.result == CONNECTION_ERROR){
 		perror("Unknown error while connecting server");
+		log.error("Unknown error while connecting server");
+	}
 
 	this->connectionId = response.connectionId;
-	log.debug("Connection established. Connection id: {}", response.connectionId);
+	log.setName(string("CLIENT-").append(Helper::convertToString(this->connectionId)));
+	log.info("Connection established. Connection id: {}", response.connectionId);
 }
 
 long Client::getRandomUUID(){
 	srand (time(NULL));
-	return (static_cast<long>(rand()) << (sizeof(int) * 8)) | rand();
+	return (static_cast<long>(rand()) << 8) | rand();
 }
 
-void Client::processInput(std::string input){
+std::string Client::processInput(std::string input){
 
 
+
+	return "" ;
 }
