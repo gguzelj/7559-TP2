@@ -15,10 +15,9 @@ public:
 
 private:
 
-	ServerQueue requestsQueue;
-	ServerQueue connectionQueue;
+	ServerQueue requestsQ;
+	ServerQueue responsesQ;
 	Logger log;
-	int connectionCounter;
 
 	void handleNewConnectionRequest(const request request);
 	void handleInsertRequest(const request request);

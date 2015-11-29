@@ -6,33 +6,35 @@
 #define READ_RESPONSE 2
 #define SELECT_RESPONSE 3
 
+#define INSERT_OK 1
+#define INSERT_ERROR 2
+
 #define CONNECTION_OK 0
 #define CONNECTION_ERROR 1
 
-typedef struct {
+struct newConnectionResponse{
 	long mtype;
 	unsigned int result;
 	long connectionId;
-} newConnectionResponse;
+};
 
-typedef struct {
+struct insertResponse{
 	long mtype;
 	unsigned int result;
-} insertResponse;
+};
 
-typedef struct {
+struct readResponse{
 	long mtype;
 	char nombre[61];
 	char direccion[120];
 	char telefono[13];
-} readResponse;
+};
 
-typedef struct {
+struct selectResponse{
 	long mtype;
 	char nombre[61];
 	char direccion[120];
 	char telefono[13];
-} selectResponse;
-
+};
 
 #endif /* DBRESPONSE_H_ */

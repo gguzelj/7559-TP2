@@ -1,18 +1,17 @@
 #include "Manager.h"
 
 Manager::Manager() :
-		requestsQueue(utils::QUEUE_FILE, utils::REQUEST_QUEUE),
-		connectionQueue(utils::QUEUE_FILE, utils::CONNECTION_QUEUE),
-		log(Logger::LogLevel::DEBUG, "DB_MANAGER"),
-		connectionCounter(0){
+		requestsQ(utils::QUEUE_FILE, utils::REQUESTS_QUEUE),
+		responsesQ(utils::QUEUE_FILE, utils::RESPONSES_QUEUE),
+		log(Logger::LogLevel::DEBUG, "DB_MANAGER") {
 
 	log.debug("Creating DbManager");
 
 	log.debug("Creating requests Queue");
-	requestsQueue.create();
+	requestsQ.create();
 
-	log.debug("Creating connections Queue");
-	connectionQueue.create();
+	log.debug("Creating responses Queue");
+	responsesQ.create();
 
 	log.debug("All queues created");
 	log.debug("DbManager created");
@@ -22,10 +21,10 @@ Manager::~Manager() {
 	log.debug("Deleting DbManager");
 
 	log.debug("Deleting requests Queue");
-	requestsQueue.destroy();
+	requestsQ.destroy();
 
-	log.debug("Deleting connections Queue");
-	connectionQueue.destroy();
+	log.debug("Deleting responses Queue");
+	responsesQ.destroy();
 
 	log.debug("All queues Deleted");
 	log.debug("DbManager Deleted");
@@ -36,49 +35,44 @@ void Manager::handleRequest(){
 	log.debug("Waiting for requests");
 
 	request request;
-	requestsQueue.receive(0, &request);
+	requestsQ.receive(NEW_REQUEST, &request);
 
-	log.info("New request from {}", request.connectionId);
+	log.info("New request from {}", request.sessionId);
 
-	switch (request.typeRequest) {
-		case NEW_CONNECTION:
-			handleNewConnectionRequest(request);
+	switch (request.requestType) {
 		case INSERT:
-			handleInsertRequest(request);
+			return handleInsertRequest(request);
 		case READ:
-			handleReadRequest(request);
+			return handleReadRequest(request);
 		case SELECT:
-			handleSelectRequest(request);
-			break;
+			return handleSelectRequest(request);
 		default:
 			log.error("Unknown type of request");
 	}
 
 }
 
-void Manager::handleNewConnectionRequest(const request newConnectionRequest){
-	log.info("Creating a new connectionId for new connection");
-	connectionCounter++;
+void Manager::handleInsertRequest(const request request){
+	log.info("Reading insert request from CLIENT-{}", request.sessionId);
 
-	newConnectionResponse response;
+	insertRequest insertRequest;
+	requestsQ.receive(request.sessionId, &insertRequest);
 
-	response.mtype = newConnectionRequest.connectionId;
-	response.connectionId = connectionCounter;
-	response.result = CONNECTION_OK;
+	log.info("InsertRequest received");
+	log.info("Insert new record with name {}, address {}, phone {}",
+			insertRequest.nombre, insertRequest.direccion, insertRequest.telefono);
 
-	log.info("Assigning connection id {} to new connection", connectionCounter);
+	insertResponse response;
+	response.mtype = request.sessionId;
+	response.result = INSERT_OK;
 
-	connectionQueue.send(response);
-}
-
-void Manager::handleInsertRequest(const request insertRequest){
-
+	responsesQ.send(response);
 }
 
 void Manager::handleReadRequest(const request readRequest){
-
+	log.info("READ REQUEST!! no handler yet..");
 }
 
 void Manager::handleSelectRequest(const request selectRequest){
-
+	log.info("SELECT REQUEST!! no handler yet..");
 }

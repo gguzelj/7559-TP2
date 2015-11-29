@@ -1,40 +1,35 @@
 #ifndef DBREQUEST_H_
 #define DBREQUEST_H_
 
-#define NEW_CONNECTION 1
+#define NEW_REQUEST 1
 #define INSERT 2
 #define READ 3
 #define SELECT 4
 
-typedef struct {
-	long mtype = 0;
-	long typeRequest;
-	long connectionId;
-} request;
-
-typedef struct {
+struct request {
 	long mtype;
-	long clientUUID;
-} newConnectionRequest;
+	long sessionId;
+	long requestType;
+};
 
-typedef struct {
+struct insertRequest{
 	long mtype;
 	char nombre[61];
 	char direccion[120];
 	char telefono[13];
-} insertRequest;
+};
 
-typedef struct {
+struct readRequest{
 	long mtype;
 	unsigned int line;
-} readRequest;
+};
 
-typedef struct {
+struct selectRequest{
 	long mtype;
 	char nombre[61];
 	char direccion[120];
 	char telefono[13];
-} selectRequest;
+};
 
 
 #endif /* DBREQUEST_H_ */

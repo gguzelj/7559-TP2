@@ -9,23 +9,36 @@
 #include <requests/DbRequest.h>
 #include <requests/DbResponse.h>
 
+using namespace std;
+
 class Client {
 public:
 	Client();
 	virtual ~Client();
 
-	std::string processInput(std::string input);
+	void processInput(string input);
+	void processInsert(string input);
+	void processRead(string input);
+
 	unsigned int connect();
 
 private:
-	ClientQueue requestsQueue;
-	ClientQueue connectionQueue;
-	long connectionId;
+	ClientQueue requestsQ;
+	ClientQueue responsesQ;
+
+	long sessionId;
+
 	Logger log;
 
+	void sendInsertRequest(string name, string address, string phone);
+	void receiveInsertResponse();
+
+	request createRequest(long type);
+	insertRequest createInsertRequest(string name, string address, string phone);
+
 	long getRandomUUID();
-	void sendConnectionRequest();
-	void receiveConnectionResponse();
+	bool openQueue(ClientQueue& queue);
+	void printMessage(string msg);
 };
 
 #endif /* CLIENT_H_ */

@@ -8,12 +8,8 @@ int main() {
 	Client client;
 
 	//Connect with DbManager
-	if( client.connect() == CONNECTION_ERROR ){
-		cout << "No DbManager found" << std::endl;
+	if( client.connect() == CONNECTION_ERROR )
 		exit(CONNECTION_ERROR);
-	}
-
-	cout << "client> connection established!" << endl << "client>";
 
 	//Process requests
 	while(true){
@@ -22,7 +18,7 @@ int main() {
 			cout << "C ya!" << endl;
 			break;
 		}
-		cout << client.processInput(input);
+		client.processInput(input);
 	}
 
 }
