@@ -1,8 +1,11 @@
 #include "client/Client.h"
+#include <ArgumentHandler/ArgHandler.h>
 
 using namespace std;
 
-int main() {
+int main(int argc, char** argv) {
+
+	ClientArgs args(argc, argv);
 
 	std::string input;
 	Client client;
@@ -10,6 +13,13 @@ int main() {
 	//Connect with DbManager
 	if( client.connect() == CONNECTION_ERROR )
 		exit(CONNECTION_ERROR);
+
+	string file = args.getFile();
+	if(!file.empty()){
+		client.processFile(file);
+		return 0;
+	}
+
 
 	//Process requests
 	while(true){

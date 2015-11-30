@@ -31,6 +31,16 @@ long Client::getRandomUUID(){
 	return static_cast<long>(rand());
 }
 
+void Client::processFile(string path) {
+	string line;
+	ifstream file(path);
+	if (file.is_open()) {
+		while (getline(file, line))
+			processInput(line);
+		file.close();
+	}
+}
+
 void Client::processInput(string input){
 
 	if(input.find("INSERT") != string::npos)

@@ -1,6 +1,9 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
+#include <iostream>
+#include <fstream>
+#include <string>
 #include <sstream>
 #include <cstdlib>
 #include <utils/utils.h>
@@ -16,6 +19,8 @@ public:
 	Client();
 	virtual ~Client();
 
+	void processFile(string file);
+
 	void processInput(string input);
 	void processInsert(string input);
 	void processRead(string input);
@@ -23,6 +28,7 @@ public:
 	unsigned int connect();
 
 private:
+
 	ClientQueue requestsQ;
 	ClientQueue responsesQ;
 
