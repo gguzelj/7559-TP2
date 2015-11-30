@@ -19,10 +19,13 @@ public:
 	~ClientArgs(){
 	}
 
+	bool isFileSet(){
+		return file.isSet();
+	}
+
 	std::string getFile(){
 		return file.getValue();
 	}
-
 
 private:
 	TCLAP::CmdLine cmd;

@@ -31,20 +31,19 @@ Manager::~Manager() {
 }
 
 void Manager::handleRequest(){
-
 	log.debug("Waiting for requests");
 
 	request request;
-	requestsQ.receive(NEW_REQUEST, &request);
+	requestsQ.receive(static_cast<long>(RequestEnum::NEW_REQUEST), &request);
 
 	log.info("New request from {}", request.sessionId);
 
 	switch (request.requestType) {
-		case INSERT:
+		case RequestEnum::INSERT:
 			return handleInsertRequest(request);
-		case READ:
+		case RequestEnum::READ:
 			return handleReadRequest(request);
-		case SELECT:
+		case RequestEnum::SELECT:
 			return handleSelectRequest(request);
 		default:
 			log.error("Unknown type of request");

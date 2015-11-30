@@ -1,6 +1,7 @@
 #ifndef UTILS_HELPER_H_
 #define UTILS_HELPER_H_
 
+#include <iostream>
 #include <cstring>
 #include <cerrno>
 #include <string>
@@ -20,6 +21,15 @@ public:
 		std::stringstream convert;
 		convert << t;
 		return std::string(convert.str());
+	}
+
+	static void toLower(std::string &str) {
+		for (unsigned int i = 0; i < str.length(); ++i)
+			str[i] = tolower(str[i]);
+	}
+
+	static void printClientMsg(std::string msg){
+		std::cout << "Client> " << msg << std::endl;
 	}
 
 };

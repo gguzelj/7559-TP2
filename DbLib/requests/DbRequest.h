@@ -1,15 +1,15 @@
 #ifndef DBREQUEST_H_
 #define DBREQUEST_H_
 
-#define NEW_REQUEST 1
-#define INSERT 2
-#define READ 3
-#define SELECT 4
+enum class RequestEnum
+	: int {
+		NEW_REQUEST = 1, INSERT = 2, READ = 3, SELECT = 4, SHUT_DOWN = 5, UNKNOWN = 6
+};
 
 struct request {
 	long mtype;
 	long sessionId;
-	long requestType;
+	RequestEnum requestType;
 };
 
 struct insertRequest{

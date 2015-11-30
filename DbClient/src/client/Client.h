@@ -11,6 +11,7 @@
 #include <queue/ClientQueue.h>
 #include <requests/DbRequest.h>
 #include <requests/DbResponse.h>
+#include "InstructionHandler.h"
 
 using namespace std;
 
@@ -20,13 +21,17 @@ public:
 	virtual ~Client();
 
 	void processFile(string file);
-
+	void processInput(istream& input);
 	void processInput(string input);
+
 	void processInsert(string input);
 	void processRead(string input);
+	void processSelect(string input);
+	void processShutDown(string input);
 
 	unsigned int connect();
 
+	bool isClosed();
 private:
 
 	ClientQueue requestsQ;
@@ -35,11 +40,14 @@ private:
 	long sessionId;
 
 	Logger log;
+	InstructionHandler handler;
+
+	bool closed;
 
 	void sendInsertRequest(string name, string address, string phone);
 	void receiveInsertResponse();
 
-	request createRequest(long type);
+	request createRequest(RequestEnum type);
 	insertRequest createInsertRequest(string name, string address, string phone);
 
 	long getRandomUUID();

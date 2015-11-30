@@ -1,5 +1,6 @@
 #include "client/Client.h"
 #include <ArgumentHandler/ArgHandler.h>
+#include <utils/Helper.h>
 
 using namespace std;
 
@@ -14,21 +15,15 @@ int main(int argc, char** argv) {
 	if( client.connect() == CONNECTION_ERROR )
 		exit(CONNECTION_ERROR);
 
-	string file = args.getFile();
-	if(!file.empty()){
-		client.processFile(file);
+	//File processing
+	if(args.isFileSet()){
+		client.processFile(args.getFile());
 		return 0;
 	}
 
-
-	//Process requests
-	while(true){
-		getline(cin, input);
-		if(string("exit").compare(input) == 0){
-			cout << "C ya!" << endl;
-			break;
-		}
-		client.processInput(input);
+	//Online client
+	while(!client.isClosed()){
+		client.processInput(cin);
 	}
 
 }

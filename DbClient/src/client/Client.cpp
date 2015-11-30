@@ -4,7 +4,8 @@ Client::Client() :
 		requestsQ(utils::QUEUE_FILE, utils::REQUESTS_QUEUE),
 		responsesQ(utils::QUEUE_FILE, utils::RESPONSES_QUEUE),
 		sessionId(getRandomUUID()),
-		log(Logger::LogLevel::DEBUG) {
+		log(Logger::LogLevel::DEBUG),
+		closed(false){
 }
 
 Client::~Client() {
@@ -41,13 +42,29 @@ void Client::processFile(string path) {
 	}
 }
 
+void Client::processInput(istream& input){
+	string instruction;
+	getline(input, instruction);
+	return processInput(instruction);
+}
+
 void Client::processInput(string input){
 
-	if(input.find("INSERT") != string::npos)
-		return processInsert(input);
+	switch (InstructionHandler::getType(input)) {
+		case RequestEnum::INSERT:
+			return processInsert(input);
 
-	if(input.find("READ") != string::npos)
-		return processRead(input);
+		case RequestEnum::READ:
+			return processRead(input);
+
+		case RequestEnum::SELECT:
+			return processSelect(input);
+
+		case RequestEnum::SHUT_DOWN:
+			return processShutDown(input);
+		default:
+				break;
+	}
 
 }
 
@@ -66,7 +83,7 @@ void Client::processInsert(string input){
 
 void Client::sendInsertRequest(string name, string address, string phone){
 	log.info("Sending insert request");
-	requestsQ.send(createRequest(INSERT));
+	requestsQ.send(createRequest(RequestEnum::INSERT));
 	requestsQ.send(createInsertRequest(name, address, phone));
 }
 
@@ -87,9 +104,17 @@ void Client::processRead(string input){
 
 }
 
-struct request Client::createRequest(long type){
+void Client::processSelect(string input){
+
+}
+
+void Client::processShutDown(string input){
+
+}
+
+struct request Client::createRequest(RequestEnum type){
 	request req;
-	req.mtype = NEW_REQUEST;
+	req.mtype = static_cast<long>(RequestEnum::NEW_REQUEST);
 	req.sessionId = this->sessionId;
 	req.requestType = type;
 	return req;
@@ -106,4 +131,8 @@ struct insertRequest Client::createInsertRequest(string name, string address, st
 
 bool Client::openQueue(ClientQueue& queue){
 	return queue.getQueue() == CONNECTION_OK;
+}
+
+bool Client::isClosed(){
+	return closed;
 }
