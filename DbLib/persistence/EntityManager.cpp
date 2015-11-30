@@ -12,7 +12,7 @@ using namespace std;
 
 EntityManager::EntityManager() {
 	// TODO Auto-generated constructor stub
-	this->m_fd = syscalls::open ( this->m_fname.c_str(),O_CREAT|O_RDWR,0777 );
+	m_fd = syscalls::open ( this->m_fname.c_str(),O_CREAT|O_RDWR,0777 );
 	syscalls::lseek(m_fd,0,SEEK_END);
 	m_offset = 0; //change to file size
 }

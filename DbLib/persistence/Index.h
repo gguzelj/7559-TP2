@@ -15,9 +15,10 @@ public:
 	std::list<long> getOffsets(const char* name);
 
 private:
-	std::map<char*,long> m_index;
+	std::multimap<const char*,long> m_index;
 
 	int m_fd;
+	std::string m_fname;
 };
 
 #endif /* INDEX_H_ */
