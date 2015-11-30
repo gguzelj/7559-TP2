@@ -58,9 +58,10 @@ void Client::processInput(string input){
 			return processShutDown(input);
 
 		case RequestEnum::UNKNOWN:
-			closed = handler.isExitInstruction(input);
-			break;
-
+			if(handler.isExitInstruction(input)){
+				closed = true;
+				return;
+			}
 		default:
 			Helper::printClientMsg("Unknown instruction");
 	}
