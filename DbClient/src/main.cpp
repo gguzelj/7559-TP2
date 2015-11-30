@@ -7,8 +7,6 @@ using namespace std;
 int main(int argc, char** argv) {
 
 	ClientArgs args(argc, argv);
-
-	std::string input;
 	Client client;
 
 	//Connect with DbManager

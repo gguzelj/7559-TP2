@@ -50,7 +50,7 @@ void Client::processInput(istream& input){
 
 void Client::processInput(string input){
 
-	switch (InstructionHandler::getType(input)) {
+	switch (InstructionHandler::getTypeRequest(input)) {
 		case RequestEnum::INSERT:
 			return processInsert(input);
 
@@ -62,8 +62,13 @@ void Client::processInput(string input){
 
 		case RequestEnum::SHUT_DOWN:
 			return processShutDown(input);
+
+		case RequestEnum::UNKNOWN:
+			closed = InstructionHandler::isExitInstruction(input);
+			break;
+
 		default:
-				break;
+			Helper::printClientMsg("Unknown instruction");
 	}
 
 }

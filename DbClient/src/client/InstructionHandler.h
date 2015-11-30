@@ -6,7 +6,7 @@ using namespace std;
 class InstructionHandler {
 public:
 
-	static RequestEnum getType(string instr) {
+	static RequestEnum getTypeRequest(string instr) {
 
 		if (InstructionHandler::isInsert(instr))
 			return RequestEnum::INSERT;
@@ -23,6 +23,14 @@ public:
 		return RequestEnum::UNKNOWN;
 	}
 
+	static bool isExitInstruction(string instr){
+		string ins(instr);
+		Helper::toLower(ins);
+		if(ins.find(utils::IN_EXIT) != string::npos)
+			return true;
+
+		return false;
+	}
 	static bool isInsert(string instr){
 		string ins(instr);
 		Helper::toLower(ins);
