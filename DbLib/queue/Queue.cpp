@@ -18,7 +18,6 @@ void Queue::create(){
 
 unsigned int Queue::getQueue(){
 	this->id = msgget(this->clave, 0);
-
 	return (this->id == -1)?CONNECTION_ERROR:CONNECTION_OK;
 }
 

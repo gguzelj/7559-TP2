@@ -3,40 +3,22 @@
 Manager::Manager() :
 		requestsQ(utils::QUEUE_FILE, utils::REQUESTS_QUEUE),
 		responsesQ(utils::QUEUE_FILE, utils::RESPONSES_QUEUE),
-		log(Logger::LogLevel::DEBUG, "DB_MANAGER") {
+		running(true){
 
-	log.debug("Creating DbManager");
-
-	log.debug("Creating requests Queue");
 	requestsQ.create();
-
-	log.debug("Creating responses Queue");
 	responsesQ.create();
-
-	log.debug("All queues created");
-	log.debug("DbManager created");
+	Helper::printManagerMsg("All Queues created");
 }
 
 Manager::~Manager() {
-	log.debug("Deleting DbManager");
-
-	log.debug("Deleting requests Queue");
 	requestsQ.destroy();
-
-	log.debug("Deleting responses Queue");
 	responsesQ.destroy();
-
-	log.debug("All queues Deleted");
-	log.debug("DbManager Deleted");
+	Helper::printManagerMsg("All Queues deleted");
 }
 
 void Manager::handleRequest(){
-	log.debug("Waiting for requests");
-
 	request request;
 	requestsQ.receive(static_cast<long>(RequestEnum::NEW_REQUEST), &request);
-
-	log.info("New request from {}", request.sessionId);
 
 	switch (request.requestType) {
 		case RequestEnum::INSERT:
@@ -45,33 +27,56 @@ void Manager::handleRequest(){
 			return handleReadRequest(request);
 		case RequestEnum::SELECT:
 			return handleSelectRequest(request);
+		case RequestEnum::SHUT_DOWN:
+			return handleShutDownRequest(request);
 		default:
-			log.error("Unknown type of request");
+			Helper::printManagerMsg("Unknown type of request received!");
 	}
 
 }
 
 void Manager::handleInsertRequest(const request request){
-	log.info("Reading insert request from CLIENT-{}", request.sessionId);
 
 	insertRequest insertRequest;
 	requestsQ.receive(request.sessionId, &insertRequest);
 
-	log.info("InsertRequest received");
-	log.info("Insert new record with name {}, address {}, phone {}",
-			insertRequest.nombre, insertRequest.direccion, insertRequest.telefono);
+	std::string msg("Inserting new record with ");
+	msg.append("name: ").append(insertRequest.nombre);
+	msg.append(", address: ").append(insertRequest.direccion);
+	msg.append(", phone: ").append(insertRequest.telefono);
+	Helper::printManagerMsg(msg);
+
+	//LOGICA PARA INSERTAR REGISTRO!!
 
 	insertResponse response;
 	response.mtype = request.sessionId;
 	response.result = INSERT_OK;
-
 	responsesQ.send(response);
 }
 
 void Manager::handleReadRequest(const request readRequest){
-	log.info("READ REQUEST!! no handler yet..");
 }
 
 void Manager::handleSelectRequest(const request selectRequest){
-	log.info("SELECT REQUEST!! no handler yet..");
+}
+
+void Manager::handleShutDownRequest(const request request){
+	shutDownRequest shutDownRequest;
+	requestsQ.receive(request.sessionId, &shutDownRequest);
+
+	std::string msg("Shutting down request from client ");
+	msg.append(Helper::convertToString(request.sessionId));
+	Helper::printManagerMsg(msg);
+
+	running = false;
+
+	shutDownResponse response;
+	response.mtype = request.sessionId;
+	response.success = true;
+
+	responsesQ.send(response);
+}
+
+bool Manager::isRunning(){
+	return running;
 }

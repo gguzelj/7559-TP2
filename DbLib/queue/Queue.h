@@ -29,14 +29,12 @@ public:
 };
 
 template<class T> void Queue::send(T dato) {
-	std::cout << "Sending msg to id: " << this->id << " SIZE: " << sizeof(T) - sizeof(long) << std::endl;
 	if(msgsnd(this->id, static_cast<const void*>(&dato), sizeof(T) - sizeof(long), 0) < 0 ){
 		perror(Helper::convertToString(strerror(errno)).c_str());
 	}
 }
 
 template<class T> void Queue::receive(const unsigned int type, T* buffer) {
-	std::cout << "Receiving msg id: " << this->id << " type: " << type << " SIZE " << sizeof(T) - sizeof(long) << std::endl;
 	if(msgrcv(this->id, static_cast<void *>(buffer), sizeof(T) - sizeof(long), type, 0) < 0)
 		perror(Helper::convertToString(strerror(errno)).c_str());
 }

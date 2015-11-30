@@ -6,7 +6,10 @@ using namespace std;
 class InstructionHandler {
 public:
 
-	static RequestEnum getTypeRequest(string instr) {
+	InstructionHandler(long id) : sessionId(id){
+	}
+
+	RequestEnum getTypeRequest(string instr) {
 
 		if (InstructionHandler::isInsert(instr))
 			return RequestEnum::INSERT;
@@ -23,49 +26,67 @@ public:
 		return RequestEnum::UNKNOWN;
 	}
 
-	static bool isExitInstruction(string instr){
+	bool isExitInstruction(string instr){
+		return isInstructionOf(instr,utils::IN_EXIT);
+	}
+
+	bool isInsert(string instr){
+		return isInstructionOf(instr,utils::IN_INSERT);
+	}
+
+	bool isRead(string instr){
+		return isInstructionOf(instr,utils::IN_READ);
+	}
+
+	bool isSelect(string instr){
+		return isInstructionOf(instr,utils::IN_SELECT);
+	}
+
+	bool isShutDown(string instr){
+		return isInstructionOf(instr,utils::IN_SHUT_DOWN);
+	}
+
+	bool isInstructionOf(string instr, string patter){
 		string ins(instr);
 		Helper::toLower(ins);
-		if(ins.find(utils::IN_EXIT) != string::npos)
-			return true;
-
-		return false;
-	}
-	static bool isInsert(string instr){
-		string ins(instr);
-		Helper::toLower(ins);
-		if(ins.find(utils::IN_INSERT) != string::npos)
+		if(ins.find(patter) != string::npos)
 			return true;
 
 		return false;
 	}
 
-	static bool isRead(string instr){
-		string ins(instr);
-		Helper::toLower(instr);
-		if(ins.find(utils::IN_READ) != string::npos)
-			return true;
-
-		return false;
+	struct request createRequest(RequestEnum type){
+		request req;
+		req.mtype = static_cast<long>(RequestEnum::NEW_REQUEST);
+		req.sessionId = this->sessionId;
+		req.requestType = type;
+		return req;
 	}
 
-	static bool isSelect(string instr){
-		string ins(instr);
-		Helper::toLower(instr);
-		if(ins.find(utils::IN_SELECT) != string::npos)
-			return true;
+	struct insertRequest createInsertRequest(string input){
+		std::istringstream ss(input.substr(7));
 
-		return false;
+		string name; getline(ss, name, ',');
+		string address; getline(ss, address, ',');
+		string phone; getline(ss, phone, ',');
+
+		insertRequest req;
+		req.mtype = this->sessionId;
+		strcpy(req.nombre, name.c_str());
+		strcpy(req.direccion, address.c_str());
+		strcpy(req.telefono, phone.c_str());
+		return req;
 	}
 
-	static bool isShutDown(string instr){
-		string ins(instr);
-		Helper::toLower(instr);
-		if(ins.find(utils::IN_SHUT_DOWN) != string::npos)
-			return true;
-
-		return false;
+	struct shutDownRequest createShutDownRequest(){
+		shutDownRequest req;
+		req.mtype = this->sessionId;
+		return req;
 	}
+
+private:
+	long sessionId;
+
 
 };
 

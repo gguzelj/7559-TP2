@@ -3,7 +3,6 @@
 
 #include <requests/DbRequest.h>
 #include <queue/ServerQueue.h>
-#include <logger/Logger.h>
 #include <utils/utils.h>
 
 class Manager {
@@ -13,16 +12,19 @@ public:
 
 	void handleRequest();
 
+	bool isRunning();
+
 private:
 
 	ServerQueue requestsQ;
 	ServerQueue responsesQ;
-	Logger log;
+	bool running;
 
 	void handleNewConnectionRequest(const request request);
 	void handleInsertRequest(const request request);
 	void handleReadRequest(const request request);
 	void handleSelectRequest(const request request);
+	void handleShutDownRequest(const request request);
 
 };
 

@@ -32,6 +32,19 @@ public:
 		std::cout << "Client> " << msg << std::endl;
 	}
 
+	static void printClientMsg(){
+		std::cout << "Client> ";
+	}
+
+	static void printManagerMsg(std::string msg){
+		std::cout << "Manager> " << msg << std::endl;
+	}
+
+	static long getRandomUUID(){
+		srand (time(NULL));
+		return static_cast<long>(rand());
+	}
+
 };
 
 #endif /* UTILS_HELPER_H_ */

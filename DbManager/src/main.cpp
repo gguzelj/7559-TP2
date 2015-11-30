@@ -12,7 +12,7 @@ int main() {
 
 	Manager manager;
 
-	while(true){
+	while(manager.isRunning()){
 		manager.handleRequest();
 	}
 

@@ -31,5 +31,10 @@ struct selectRequest{
 	char telefono[13];
 };
 
+struct shutDownRequest{
+	long mtype;
+	long sessionId;
+};
+
 
 #endif /* DBREQUEST_H_ */

@@ -37,4 +37,9 @@ struct selectResponse{
 	char telefono[13];
 };
 
+struct shutDownResponse{
+	long mtype;
+	bool success;
+};
+
 #endif /* DBRESPONSE_H_ */
