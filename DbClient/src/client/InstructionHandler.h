@@ -14,9 +14,6 @@ public:
 		if (InstructionHandler::isInsert(instr))
 			return RequestEnum::INSERT;
 
-		if (InstructionHandler::isRead(instr))
-			return RequestEnum::READ;
-
 		if (InstructionHandler::isSelect(instr))
 			return RequestEnum::SELECT;
 
@@ -32,10 +29,6 @@ public:
 
 	bool isInsert(string instr){
 		return isInstructionOf(instr,utils::IN_INSERT);
-	}
-
-	bool isRead(string instr){
-		return isInstructionOf(instr,utils::IN_READ);
 	}
 
 	bool isSelect(string instr){
@@ -75,6 +68,17 @@ public:
 		strcpy(req.nombre, name.c_str());
 		strcpy(req.direccion, address.c_str());
 		strcpy(req.telefono, phone.c_str());
+		return req;
+	}
+
+	struct selectRequest createSelectRequest(string input){
+		std::istringstream ss(input.substr(7));
+
+		string name; getline(ss, name, ',');
+
+		selectRequest req;
+		req.mtype = this->sessionId;
+		strcpy(req.nombre, name.c_str());
 		return req;
 	}
 

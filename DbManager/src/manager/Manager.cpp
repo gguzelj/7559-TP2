@@ -23,8 +23,6 @@ void Manager::handleRequest(){
 	switch (request.requestType) {
 		case RequestEnum::INSERT:
 			return handleInsertRequest(request);
-		case RequestEnum::READ:
-			return handleReadRequest(request);
 		case RequestEnum::SELECT:
 			return handleSelectRequest(request);
 		case RequestEnum::SHUT_DOWN:
@@ -46,7 +44,18 @@ void Manager::handleInsertRequest(const request request){
 	msg.append(", phone: ").append(insertRequest.telefono);
 	Helper::printManagerMsg(msg);
 
-	//LOGICA PARA INSERTAR REGISTRO!!
+	Entity ent;
+
+	strncpy(ent.nombre, insertRequest.nombre, sizeof(insertRequest.nombre));
+	ent.nombre[sizeof(insertRequest.nombre) - 1] = '\0';
+
+	strncpy(ent.direccion, insertRequest.direccion, sizeof(insertRequest.direccion));
+	ent.direccion[sizeof(insertRequest.direccion) - 1] = '\0';
+
+	strncpy(ent.telefono, insertRequest.telefono, sizeof(insertRequest.telefono));
+	ent.telefono[sizeof(insertRequest.telefono) - 1] = '\0';
+
+	entities.persist(ent);
 
 	insertResponse response;
 	response.mtype = request.sessionId;
@@ -54,10 +63,32 @@ void Manager::handleInsertRequest(const request request){
 	responsesQ.send(response);
 }
 
-void Manager::handleReadRequest(const request readRequest){
-}
+void Manager::handleSelectRequest(const request request){
+	Entity ent;
+	selectRequest selectRequest;
+	requestsQ.receive(request.sessionId, &selectRequest);
 
-void Manager::handleSelectRequest(const request selectRequest){
+	std::string msg("Executing select request from client ");
+	msg.append(Helper::convertToString(request.sessionId));
+	Helper::printManagerMsg(msg);
+
+	std::list<Entity> result = entities.findAll(selectRequest.nombre);
+
+	selectResultsResponse resultsResponse;
+	resultsResponse.mtype = request.sessionId;
+	resultsResponse.matches = result.size();
+	responsesQ.send(resultsResponse);
+
+	selectResponse selectResponse;
+	selectResponse.mtype = request.sessionId;
+	for (std::list<Entity>::iterator it = result.begin(); it != result.end(); it++){
+		ent = *it;
+		strcpy(selectResponse.nombre, ent.nombre);
+		strcpy(selectResponse.direccion, ent.direccion);
+		strcpy(selectResponse.telefono, ent.telefono);
+		responsesQ.send(selectResponse);
+	}
+
 }
 
 void Manager::handleShutDownRequest(const request request){

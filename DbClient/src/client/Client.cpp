@@ -48,9 +48,6 @@ void Client::processInput(string input){
 		case RequestEnum::INSERT:
 			return processInsert(input);
 
-		case RequestEnum::READ:
-			return processRead(input);
-
 		case RequestEnum::SELECT:
 			return processSelect(input);
 
@@ -89,11 +86,27 @@ void Client::receiveInsertResponse(){
 	}
 }
 
-void Client::processRead(string input){
-
-}
-
 void Client::processSelect(string input){
+	requestsQ.send(handler.createRequest(RequestEnum::SELECT));
+	requestsQ.send(handler.createSelectRequest(input));
+
+	//Amount of matches?
+	selectResultsResponse result;
+	selectResponse selectResponse;
+	responsesQ.receive(this->sessionId, &result);
+
+	Helper::printClientMsg(
+			Helper::convertToString(result.matches).append(" results found!"));
+
+	string msg = "";
+
+	for (unsigned int i = 0; i < result.matches; ++i) {
+		responsesQ.receive(this->sessionId, &selectResponse);
+		msg.clear();
+		msg.append("name: ").append(selectResponse.nombre);
+		msg.append(" address: ").append(selectResponse.direccion);
+		msg.append(" phone: ").append(selectResponse.telefono);
+	}
 
 }
 

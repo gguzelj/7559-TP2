@@ -23,11 +23,9 @@ struct insertResponse{
 	unsigned int result;
 };
 
-struct readResponse{
+struct selectResultsResponse{
 	long mtype;
-	char nombre[61];
-	char direccion[120];
-	char telefono[13];
+	unsigned int matches;
 };
 
 struct selectResponse{

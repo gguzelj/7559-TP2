@@ -24,7 +24,6 @@ public:
 	void processInput(string input);
 
 	void processInsert(string input);
-	void processRead(string input);
 	void processSelect(string input);
 	void processShutDown(string input);
 

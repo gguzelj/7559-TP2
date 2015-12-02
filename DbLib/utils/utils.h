@@ -7,7 +7,6 @@ namespace utils {
 
 static const std::string IN_EXIT = "exit";
 static const std::string IN_INSERT = "insert";
-static const std::string IN_READ = "read";
 static const std::string IN_SELECT = "select";
 static const std::string IN_SHUT_DOWN = "shut_down";
 
