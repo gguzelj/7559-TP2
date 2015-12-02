@@ -10,7 +10,7 @@ static const std::string IN_INSERT = "insert";
 static const std::string IN_SELECT = "select";
 static const std::string IN_SHUT_DOWN = "shut_down";
 
-static const std::string QUEUE_FILE = "../../README.md";
+static const std::string QUEUE_FILE = "/tmp/queue.txt";
 static const char REQUESTS_QUEUE = '1';
 static const char RESPONSES_QUEUE = '2';
 

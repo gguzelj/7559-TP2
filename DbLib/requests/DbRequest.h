@@ -3,7 +3,7 @@
 
 enum class RequestEnum
 	: int {
-		NEW_REQUEST = 1, INSERT = 2, SELECT = 3, SHUT_DOWN = 4, UNKNOWN = 5
+		NEW_REQUEST = 1, INSERT = 2, SELECT = 3, SHUT_DOWN = 4, HELP = 5, UNKNOWN = 6
 };
 
 struct request {

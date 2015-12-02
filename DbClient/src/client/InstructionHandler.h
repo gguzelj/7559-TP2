@@ -3,6 +3,8 @@
 
 using namespace std;
 
+const string HELP_OPTION = "client --help";
+
 class InstructionHandler {
 public:
 
@@ -11,14 +13,18 @@ public:
 
 	RequestEnum getTypeRequest(string instr) {
 
-		if (InstructionHandler::isInsert(instr))
+		if (isInsert(instr))
 			return RequestEnum::INSERT;
 
-		if (InstructionHandler::isSelect(instr))
+		if (isSelect(instr))
 			return RequestEnum::SELECT;
 
-		if (InstructionHandler::isShutDown(instr))
+		if (isShutDown(instr))
 			return RequestEnum::SHUT_DOWN;
+
+		if (instr.compare(HELP_OPTION) == 0){
+			return RequestEnum::HELP;
+		}
 
 		return RequestEnum::UNKNOWN;
 	}

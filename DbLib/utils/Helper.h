@@ -36,6 +36,12 @@ public:
 		std::cout << "Client> ";
 	}
 
+	static void printUsage(){
+		std::cout << "client Usage: available commands:" << std::endl;
+		std::cout << "SELECT: 'select nombre,direccion,telefono'" << std::endl;
+		std::cout << "INSERT: 'insert nombre,direccion,telefono'" << std::endl;
+	}
+
 	static void printManagerMsg(std::string msg){
 		std::cout << "Manager> " << msg << std::endl;
 	}

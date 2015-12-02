@@ -54,13 +54,17 @@ void Client::processInput(string input){
 		case RequestEnum::SHUT_DOWN:
 			return processShutDown(input);
 
+		case RequestEnum::HELP:
+			Helper::printUsage();
+			return;
+
 		case RequestEnum::UNKNOWN:
 			if(handler.isExitInstruction(input)){
 				closed = true;
 				return;
 			}
 		default:
-			Helper::printClientMsg("Unknown instruction");
+			Helper::printClientMsg("'" + input +"' is not a valid command. See 'client --help'");
 	}
 
 }
@@ -100,6 +104,7 @@ void Client::processSelect(string input){
 
 	string msg = "";
 
+	result.matches = 0;
 	for (unsigned int i = 0; i < result.matches; ++i) {
 		responsesQ.receive(this->sessionId, &selectResponse);
 		msg.clear();
