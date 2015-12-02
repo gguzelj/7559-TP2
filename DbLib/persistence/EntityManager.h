@@ -8,17 +8,18 @@
 
 class EntityManager {
 public:
-	EntityManager();
+	EntityManager(std::string fileName);
 	virtual ~EntityManager();
 
 	void persist(Entity entity);
 
-	std::list<Entity> findAll(std::string name);
+	void findAll(const char* name,std::list<Entity>& results);
 
 private:
 	Index m_index;
 
-	int m_fd;
+	int m_fdReader;
+	int m_fdWriter;
 	std::string m_fname;
 	long m_offset;
 };

@@ -8,18 +8,21 @@
 #include "Index.h"
 #include "../syscalls/SysCalls.h"
 
-Index::Index() {
+Index::Index(std::string idxname) {
 
-	m_fd = syscalls::open( this->m_fname.c_str(),O_CREAT|O_RDONLY,0777 );
+	m_fname = idxname;
+	m_fd = syscalls::open( m_fname.c_str(),O_CREAT|O_RDONLY,0777 );
 	syscalls::lseek(m_fd,0,SEEK_SET);
 
 	char name[61];
 	long offset;
 
 	char buff[sizeof(name)+sizeof(offset)];
+	char* t = buff + sizeof(name);
 	while(syscalls::read(m_fd, buff, sizeof(buff))){
-		memcpy(name, buff, 61);
-		memcpy(&offset,buff+61, sizeof(long));
+
+		memcpy(name, buff, sizeof(name));
+		memcpy(&offset, t, sizeof(long));
 		m_index.insert(std::make_pair(name,offset));
 	}
 
@@ -50,19 +53,13 @@ void Index::addIndex(const char* name, long offset){
 	m_index.insert(std::make_pair(name,offset));
 }
 
-std::list<long> Index::getOffsets(const char* name){
+void Index::getOffsets(const char* name,std::list<long>& offsets){
 
-	std::list<long> offsets;
 	std::pair <std::multimap<const char*,long>::iterator, std::multimap<const char*,long>::iterator> ret;
 	ret = m_index.equal_range(name);
 
-	std::list<long>::iterator itOffset = offsets.begin();
-
 	for (std::multimap<const char*,long>::iterator it = ret.first; it!=ret.second; ++it){
-	  *itOffset = it->second;
-	  itOffset++;
+	    offsets.push_back(it->second);
 	}
-
-	return offsets;
 }
 

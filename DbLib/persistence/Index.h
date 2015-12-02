@@ -7,12 +7,12 @@
 
 class Index {
 public:
-	Index();
+	Index(std::string name);
 	virtual ~Index();
 
 	void addIndex(const char* name, long offset);
 
-	std::list<long> getOffsets(const char* name);
+	void getOffsets(const char* name,std::list<long>& offsets);
 
 private:
 	std::multimap<const char*,long> m_index;

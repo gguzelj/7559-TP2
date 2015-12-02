@@ -10,44 +10,45 @@
 
 using namespace std;
 
-EntityManager::EntityManager() {
-	// TODO Auto-generated constructor stub
-	m_fd = syscalls::open ( this->m_fname.c_str(),O_CREAT|O_RDWR,0777 );
-	syscalls::lseek(m_fd,0,SEEK_END);
-	m_offset = 0; //change to file size
+EntityManager::EntityManager(std::string fileName) :m_index("entity.idx"){
+	m_fname = fileName;
+	m_fdReader = syscalls::open ( m_fname.c_str(),O_CREAT|O_RDONLY,0777 );
+	m_fdWriter = syscalls::open ( m_fname.c_str(),O_CREAT|O_WRONLY,0777 );
+
+	syscalls::lseek(m_fdWriter,0,SEEK_END);
+
+	struct stat buf;
+	fstat(m_fdWriter, &buf);
+	m_offset = buf.st_size;
 }
 
 EntityManager::~EntityManager() {
-	// TODO Auto-generated destructor stub
+	syscalls::close(m_fdReader);
+	syscalls::close(m_fdWriter);
 }
 
 void EntityManager::persist(Entity entity){
 	char buffer[sizeof(Entity)];
 	memcpy(buffer, &entity, sizeof(Entity));
 
-	syscalls::lseek(m_fd,0,SEEK_END);
-	m_offset = 0;
-	syscalls::write(m_fd,buffer,sizeof(Entity));
-	m_offset += sizeof(Entity); //ver el tema del padding.
-
+	syscalls::write(m_fdWriter,buffer,sizeof(Entity));
 	m_index.addIndex(entity.nombre, m_offset);
+
+	m_offset += sizeof(Entity);
 }
 
-std::list<Entity> EntityManager::findAll(std::string name){
+ void EntityManager::findAll(const char* name,std::list<Entity>& results){
 
-	std::list<long> offsets = m_index.getOffsets(name.c_str());
 	std::list<Entity> entities;
-	std::list<Entity>::iterator itEntity = entities.begin();
+
+	std::list<long> offsets;
+	m_index.getOffsets(name, offsets);
 
 	for (std::list<long>::iterator it = offsets.begin(); it != offsets.end(); it++){
 		long offset = *it;
 		Entity entity;
-		syscalls::lseek(m_fd, offset,SEEK_SET);
-		syscalls::read(m_fd, &entity, sizeof(Entity));
-		*itEntity = entity;
-		itEntity++;
+		syscalls::lseek(m_fdReader, offset,SEEK_SET);
+		syscalls::read(m_fdReader, &entity, sizeof(Entity));
+		entities.push_back(entity);
 	}
-
-	return entities;
-
 }
