@@ -31,6 +31,10 @@ Index::Index(std::string idxname) {
 
 Index::~Index() {
 
+	//for (std::multimap<const char*,long>::iterator it=m_index.begin(); it!=m_index.end(); ++it)
+	//	    std::cout << (*it).first << " => " << (*it).second << '\n';
+
+
 	m_fd = syscalls::open( this->m_fname.c_str(),O_CREAT|O_WRONLY,0777 );
 	syscalls::lseek(m_fd,0,SEEK_SET);
 
@@ -51,9 +55,17 @@ Index::~Index() {
 
 void Index::addIndex(const char* name, long offset){
 	m_index.insert(std::make_pair(name,offset));
+
+	//TODO: COMMENT!
+	//for (std::multimap<const char*,long>::iterator it=m_index.begin(); it!=m_index.end(); ++it)
+	//    std::cout << (*it).first << " => " << (*it).second << '\n';
 }
 
 void Index::getOffsets(const char* name,std::list<long>& offsets){
+
+	//TODO: COMMENT!
+	//for (std::multimap<const char*,long>::iterator it=m_index.begin(); it!=m_index.end(); ++it)
+	//	    std::cout << (*it).first << " => " << (*it).second << '\n';
 
 	std::pair <std::multimap<const char*,long>::iterator, std::multimap<const char*,long>::iterator> ret;
 	ret = m_index.equal_range(name);
