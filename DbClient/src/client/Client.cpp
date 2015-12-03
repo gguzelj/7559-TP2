@@ -104,13 +104,14 @@ void Client::processSelect(string input){
 
 	string msg = "";
 
-	result.matches = 0;
 	for (unsigned int i = 0; i < result.matches; ++i) {
 		responsesQ.receive(this->sessionId, &selectResponse);
 		msg.clear();
 		msg.append("name: ").append(selectResponse.nombre);
 		msg.append(" address: ").append(selectResponse.direccion);
 		msg.append(" phone: ").append(selectResponse.telefono);
+
+		cout << msg << endl;
 	}
 
 }
