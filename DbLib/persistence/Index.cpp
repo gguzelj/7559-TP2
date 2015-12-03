@@ -30,15 +30,18 @@ Index::Index(std::string idxname) {
 }
 
 Index::~Index() {
+	flushIndex();
+}
 
-	m_fd = syscalls::open( this->m_fname.c_str(),O_CREAT|O_WRONLY,0777 );
-	syscalls::lseek(m_fd,0,SEEK_SET);
+void Index::flushIndex(){
+	m_fd = syscalls::open(this->m_fname.c_str(), O_CREAT | O_WRONLY, 0777);
+	syscalls::lseek(m_fd, 0, SEEK_SET);
 
 	char name[61];
 	long offset;
 
-	std::multimap<string,long>::iterator it;
-	for (it = m_index.begin(); it!=m_index.end(); ++it){
+	std::multimap<string, long>::iterator it;
+	for (it = m_index.begin(); it != m_index.end(); ++it) {
 
 		memcpy(name, it->first.c_str(), sizeof(name));
 		offset = it->second;

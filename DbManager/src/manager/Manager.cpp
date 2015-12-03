@@ -9,6 +9,7 @@ Manager::Manager() :
 	requestsQ.create();
 	responsesQ.create();
 	Helper::printManagerMsg("All Queues created");
+	SignalHandler::getInstance()->registrarHandler(SIGINT, this);
 }
 
 Manager::~Manager() {
@@ -26,8 +27,6 @@ void Manager::handleRequest(){
 			return handleInsertRequest(request);
 		case RequestEnum::SELECT:
 			return handleSelectRequest(request);
-		case RequestEnum::SHUT_DOWN:
-			return handleShutDownRequest(request);
 		default:
 			Helper::printManagerMsg("Unknown type of request received!");
 	}
@@ -48,13 +47,13 @@ void Manager::handleInsertRequest(const request request){
 	Entity ent;
 
 	strncpy(ent.nombre, insertRequest.nombre, sizeof(insertRequest.nombre));
-	ent.nombre[sizeof(insertRequest.nombre) - 1] = '\0';
+//	ent.nombre[sizeof(insertRequest.nombre) - 1] = '\0';
 
 	strncpy(ent.direccion, insertRequest.direccion, sizeof(insertRequest.direccion));
-	ent.direccion[sizeof(insertRequest.direccion) - 1] = '\0';
+//	ent.direccion[sizeof(insertRequest.direccion) - 1] = '\0';
 
 	strncpy(ent.telefono, insertRequest.telefono, sizeof(insertRequest.telefono));
-	ent.telefono[sizeof(insertRequest.telefono) - 1] = '\0';
+//	ent.telefono[sizeof(insertRequest.telefono) - 1] = '\0';
 
 	entities.persist(ent);
 
@@ -94,21 +93,14 @@ void Manager::handleSelectRequest(const request request){
 
 }
 
-void Manager::handleShutDownRequest(const request request){
-	shutDownRequest shutDownRequest;
-	requestsQ.receive(request.sessionId, &shutDownRequest);
+void Manager::releaseResources(){
 
-	std::string msg("Shutting down request from client ");
-	msg.append(Helper::convertToString(request.sessionId));
-	Helper::printManagerMsg(msg);
+	//
 
-	running = false;
-
-	shutDownResponse response;
-	response.mtype = request.sessionId;
-	response.success = true;
-
-	responsesQ.send(response);
+	entities.flushIndex();
+	requestsQ.destroy();
+	responsesQ.destroy();
+	Helper::printManagerMsg("All Queues deleted");
 }
 
 bool Manager::isRunning(){

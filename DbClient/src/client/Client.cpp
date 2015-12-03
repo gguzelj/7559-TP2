@@ -54,6 +54,9 @@ void Client::processInput(string input){
 		case RequestEnum::SHUT_DOWN:
 			return processShutDown(input);
 
+		case RequestEnum::EXIT:
+			return processExit();
+
 		case RequestEnum::HELP:
 			Helper::printUsage();
 			return;
@@ -123,6 +126,11 @@ void Client::processShutDown(string input){
 	shutDownResponse response;
 	responsesQ.receive(this->sessionId, &response);
 	closed = response.success;
+}
+
+
+void Client::processExit(){
+	kill(getpid(), SIGINT);
 }
 
 bool Client::openQueue(ClientQueue& queue){

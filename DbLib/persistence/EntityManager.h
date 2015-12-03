@@ -12,7 +12,9 @@ public:
 	virtual ~EntityManager();
 
 	void persist(Entity entity);
-
+	void flushIndex(){
+		m_index.flushIndex();
+	}
 	void findAll(const char* name,std::list<Entity>& results);
 
 private:

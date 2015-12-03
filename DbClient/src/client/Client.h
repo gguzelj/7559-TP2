@@ -11,6 +11,9 @@
 #include <requests/DbRequest.h>
 #include <requests/DbResponse.h>
 #include "InstructionHandler.h"
+#include <sys/types.h>
+#include <signal.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -26,6 +29,7 @@ public:
 	void processInsert(string input);
 	void processSelect(string input);
 	void processShutDown(string input);
+	void processExit();
 
 	unsigned int connect();
 
