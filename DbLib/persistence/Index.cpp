@@ -23,7 +23,7 @@ Index::Index(std::string idxname) {
 
 		memcpy(name, buff, sizeof(name));
 		memcpy(&offset, t, sizeof(long));
-		m_index.insert(std::make_pair(name,offset));
+		m_index.insert(std::make_pair(string(name),offset));
 	}
 
 	syscalls::close(m_fd);
@@ -31,20 +31,16 @@ Index::Index(std::string idxname) {
 
 Index::~Index() {
 
-	//for (std::multimap<const char*,long>::iterator it=m_index.begin(); it!=m_index.end(); ++it)
-	//	    std::cout << (*it).first << " => " << (*it).second << '\n';
-
-
 	m_fd = syscalls::open( this->m_fname.c_str(),O_CREAT|O_WRONLY,0777 );
 	syscalls::lseek(m_fd,0,SEEK_SET);
 
 	char name[61];
 	long offset;
 
-	std::multimap<const char*,long>::iterator it;
+	std::multimap<string,long>::iterator it;
 	for (it = m_index.begin(); it!=m_index.end(); ++it){
 
-		memcpy(name, it->first, sizeof(name));
+		memcpy(name, it->first.c_str(), sizeof(name));
 		offset = it->second;
 		syscalls::write(m_fd, name, sizeof(name));
 		syscalls::write(m_fd, &offset, sizeof(offset));
@@ -53,24 +49,16 @@ Index::~Index() {
 	syscalls::close(m_fd);
 }
 
-void Index::addIndex(const char* name, long offset){
+void Index::addIndex(string name, long offset){
 	m_index.insert(std::make_pair(name,offset));
-
-	//TODO: COMMENT!
-	//for (std::multimap<const char*,long>::iterator it=m_index.begin(); it!=m_index.end(); ++it)
-	//    std::cout << (*it).first << " => " << (*it).second << '\n';
 }
 
-void Index::getOffsets(const char* name,std::list<long>& offsets){
+void Index::getOffsets(string name, std::list<long>& offsets){
 
-	//TODO: COMMENT!
-	//for (std::multimap<const char*,long>::iterator it=m_index.begin(); it!=m_index.end(); ++it)
-	//	    std::cout << (*it).first << " => " << (*it).second << '\n';
-
-	std::pair <std::multimap<const char*,long>::iterator, std::multimap<const char*,long>::iterator> ret;
+	std::pair <std::multimap<string,long>::iterator, std::multimap<string,long>::iterator> ret;
 	ret = m_index.equal_range(name);
 
-	for (std::multimap<const char*,long>::iterator it = ret.first; it!=ret.second; ++it){
+	for (std::multimap<string,long>::iterator it = ret.first; it!=ret.second; ++it){
 	    offsets.push_back(it->second);
 	}
 }

@@ -20,7 +20,7 @@ private:
 
 	ServerQueue requestsQ;
 	ServerQueue responsesQ;
-//	EntityManager entities;
+	EntityManager entities;
 	bool running;
 
 	void handleNewConnectionRequest(const request request);

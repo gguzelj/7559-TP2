@@ -39,8 +39,6 @@ void EntityManager::persist(Entity entity){
 
  void EntityManager::findAll(const char* name,std::list<Entity>& results){
 
-	std::list<Entity> entities;
-
 	std::list<long> offsets;
 	m_index.getOffsets(name, offsets);
 
@@ -49,6 +47,6 @@ void EntityManager::persist(Entity entity){
 		Entity entity;
 		syscalls::lseek(m_fdReader, offset,SEEK_SET);
 		syscalls::read(m_fdReader, &entity, sizeof(Entity));
-		entities.push_back(entity);
+		results.push_back(entity);
 	}
 }

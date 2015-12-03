@@ -10,12 +10,12 @@ public:
 	Index(std::string name);
 	virtual ~Index();
 
-	void addIndex(const char* name, long offset);
+	void addIndex(std::string name, long offset);
 
-	void getOffsets(const char* name,std::list<long>& offsets);
+	void getOffsets(std::string name,std::list<long>& offsets);
 
 private:
-	std::multimap<const char*,long> m_index;
+	std::multimap<std::string,long> m_index;
 
 	int m_fd;
 	std::string m_fname;

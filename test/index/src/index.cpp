@@ -19,6 +19,7 @@ using namespace std;
 void testEntityManager(){
 	EntityManager em("Entities.e");
 	Entity entity;
+
 	char* nombre = "maria";
 	char* direccion = "maure 4323";
 	char* telefono = "11111";
@@ -39,7 +40,7 @@ void testEntityManager(){
 	strncpy(entity.telefono, telefono, sizeof(entity.telefono));
 
 	em.persist(entity);
-	/*
+
 
 	nombre = "ana";
 	direccion = "bulnes 4323";
@@ -49,10 +50,10 @@ void testEntityManager(){
 	strncpy(entity.direccion, direccion, sizeof(entity.direccion));
 	strncpy(entity.telefono, telefono, sizeof(entity.telefono));
 
-	em.persist(entity);*/
+	em.persist(entity);
 
 	list<Entity> results;
-	em.findAll("maria", results);
+	em.findAll("ana", results);
 
 	list<Entity>::iterator itr  = results.begin();
 

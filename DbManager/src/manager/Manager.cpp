@@ -1,6 +1,7 @@
 #include "Manager.h"
 
 Manager::Manager() :
+		entities("people.dat"),
 		requestsQ(utils::QUEUE_FILE, utils::REQUESTS_QUEUE),
 		responsesQ(utils::QUEUE_FILE, utils::RESPONSES_QUEUE),
 		running(true){
@@ -55,7 +56,7 @@ void Manager::handleInsertRequest(const request request){
 	strncpy(ent.telefono, insertRequest.telefono, sizeof(insertRequest.telefono));
 	ent.telefono[sizeof(insertRequest.telefono) - 1] = '\0';
 
-//	entities.persist(ent);
+	entities.persist(ent);
 
 	insertResponse response;
 	response.mtype = request.sessionId;
@@ -72,22 +73,24 @@ void Manager::handleSelectRequest(const request request){
 	msg.append(Helper::convertToString(request.sessionId));
 	Helper::printManagerMsg(msg);
 
-//	std::list<Entity> result = entities.findAll(selectRequest.nombre);
+	std::list<Entity> result;
+	entities.findAll(selectRequest.nombre, result);
 
 	selectResultsResponse resultsResponse;
 	resultsResponse.mtype = request.sessionId;
-//	resultsResponse.matches = result.size();
+	resultsResponse.matches = result.size();
 	responsesQ.send(resultsResponse);
 
 	selectResponse selectResponse;
 	selectResponse.mtype = request.sessionId;
-//	for (std::list<Entity>::iterator it = result.begin(); it != result.end(); it++){
-//		ent = *it;
-//		strcpy(selectResponse.nombre, ent.nombre);
-//		strcpy(selectResponse.direccion, ent.direccion);
-//		strcpy(selectResponse.telefono, ent.telefono);
-//		responsesQ.send(selectResponse);
-//	}
+
+	for (std::list<Entity>::iterator it = result.begin(); it != result.end(); it++){
+		ent = *it;
+		strcpy(selectResponse.nombre, ent.nombre);
+		strcpy(selectResponse.direccion, ent.direccion);
+		strcpy(selectResponse.telefono, ent.telefono);
+		responsesQ.send(selectResponse);
+	}
 
 }
 
