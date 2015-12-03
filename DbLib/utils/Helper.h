@@ -40,6 +40,7 @@ public:
 		std::cout << "client Usage: available commands:" << std::endl;
 		std::cout << "SELECT: 'select nombre,direccion,telefono'" << std::endl;
 		std::cout << "INSERT: 'insert nombre,direccion,telefono'" << std::endl;
+		std::cout << "EXIT: 'exit' -> quit" << std::endl;
 	}
 
 	static void printManagerMsg(std::string msg){
